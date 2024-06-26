@@ -151,7 +151,7 @@ try:
         # Knock stuff
         if knock_last_report + knock_report_cooldown < time.ticks_ms():
             knock = knock_pin.value()
-            if knock == 1:
+            if knock == 0:
                 adafruit.send_number(client, 1, keys.AIO_KNOCK_FEED, verbose)
                 knock_last_report = time.ticks_ms()
                 if verbose:

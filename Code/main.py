@@ -36,16 +36,16 @@ light_detector = ADC(Pin(28))
 #ir_transmitter.on()
 
 
-temp_humid_report_cooldown = 5000
+temp_humid_report_cooldown = 10000
 temp_humid_last_report = 0
 
 #ir_report_cooldown = 1000
 #ir_last_report = 0
 
-light_report_cooldown = 5000
+light_report_cooldown = 10000
 light_last_report = 0
 
-knock_report_cooldown = 5000
+knock_report_cooldown = 10000
 knock_last_report = 0
 
 # Rotary stuff
@@ -149,13 +149,13 @@ try:
         
 
         # Knock stuff
-        knock = knock_pin.value()
-        if knock == 1:
-            if knock_last_report + knock_report_cooldown < time.ticks_ms():
+        if knock_last_report + knock_report_cooldown < time.ticks_ms():
+            knock = knock_pin.value()
+            if knock == 1:
                 adafruit.send_number(client, 1, keys.AIO_KNOCK_FEED, verbose)
                 knock_last_report = time.ticks_ms()
-            if verbose:
-                print("Knock, knock!")
+                if verbose:
+                    print("Knock, knock!")
         '''else:
             #adafruit.send_number(client, 0, keys.AIO_KNOCK_FEED, verbose)
             if verbose:

@@ -3,20 +3,23 @@
 import lib.keys as keys
 import utime as time
 import lib.adafruit as adafruit
-from machine import Pin, ADC
+from machine import Pin, ADC, WDT
 import dht
 import lib.adafruit as adafruit
 
 # For rotary
 from lib.rotary_irq_rp2 import RotaryIRQ
 
-import lib.wifi as wifiConnection         # Contains functions to connect/disconnect from WiFi 
+import lib.wifi as wifiConnection         # Contains functions to connect/disconnect from WiFi
 
 verbose = True
 
+# Set up a hardware watchdog timer, since there are somewhat frequent network disconnects.
+wdt = WDT(timeout=8388) # If we haven't seen a timer reset command, which is found in the main loop, in 8.388 ms (the maximum value) - reboot
+
 # Try WiFi Connection
 try:
-    ip = wifiConnection.connect()
+    ip, wlan = wifiConnection.connect()
 except KeyboardInterrupt:
     print("Keyboard interrupt")
 
@@ -173,6 +176,10 @@ try:
                 adafruit.send_number(client, 0, keys.AIO_VIBRATE_FEED, verbose)
                 print("No vibration...")
         '''
+
+        # Verify that we are connected to WiFi and reset the watchdog timer if so.
+        if wlan.isconnected():
+            wdt.feed()
         
 
 finally:                  # If an exception is thrown ...

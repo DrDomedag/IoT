@@ -19,7 +19,7 @@ def connect():
     # Print the IP assigned by router
     ip = wlan.ifconfig()[0]
     print('\nConnected on {}'.format(ip))
-    return ip
+    return ip, wlan
 
 def http_get(url = 'http://detectportal.firefox.com/'):
     _, _, host, path = url.split('/', 3)    # Separate URL request
